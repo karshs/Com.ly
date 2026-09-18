@@ -2,6 +2,9 @@ const Link = require('../models/link.model');
 const Click = require('../models/click.model');
 const { generateShortCode, isValidUrl } = require('../utils/generateShortCode');
 
+const hashIp = require('../utils/hashIp'); 
+const detectDevice = require('../utils/detectDevice');
+
 // List of system-reserved words that cannot be used as custom slugs
 const RESERVED_SLUGS = ['api', 'health', 'auth', 'r', 'bio', 'dashboard', 'login', 'signup', 'me'];
 
@@ -186,9 +189,69 @@ const deleteLink = async (req, res) => {
   }
 };
 
+const redirectLink = async (req, res) => {
+  try {
+    const { shortCode } = req.params;
+
+    const link = await Link.findOne({
+      shortCode: shortCode.toLowerCase(),
+      isActive: true,
+    });
+
+    if (!link) {
+      return res.status(404).json({
+        error: 'Short link not found or has been deactivated',
+      });
+    }
+
+    // 302 redirect
+    res.redirect(302, link.originalUrl);
+
+    // 3.record click telemetry
+    setImmediate(async () => {
+      try {
+        
+        await Link.findByIdAndUpdate(link._id, { $inc: { clicks: 1 } });
+
+        const userAgent = req.headers['user-agent'] || '';
+        const rawReferrer = req.headers['referer'] || req.headers['referrer'] || 'direct';
+        
+        let referrer = 'direct';
+        if (rawReferrer !== 'direct') {
+          try {
+            const refUrl = new URL(rawReferrer);
+            referrer = refUrl.hostname.replace(/^www\./, '');
+          } catch (e) {
+            referrer = rawReferrer.substring(0, 100);
+          }
+        }
+
+        const clientIp = req.headers['x-forwarded-for'] || req.socket.remoteAddress || req.ip;
+        const ipHash = hashIp(clientIp);
+        const device = detectDevice(userAgent);
+
+        await Click.create({
+          link: link._id,
+          timestamp: new Date(),
+          referrer,
+          device,
+          ipHash,
+        });
+      } catch (loggingError) {
+        console.error('Async Telemetry Logging Error:', loggingError);
+      }
+    });
+  } catch (error) {
+    console.error('Redirect Error:', error);
+    res.status(500).json({ error: 'Server error during redirection' });
+  }
+};
+
+
 module.exports = {
   createLink,
   getUserLinks,
   getLinkById,
   deleteLink,
+  redirectLink,
 };
