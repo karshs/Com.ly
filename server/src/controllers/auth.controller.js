@@ -268,6 +268,27 @@ const resetPassword = async (req, res) => {
   }
 };
 
+
+const getMe = async (req, res) => {
+
+  try {
+
+    res.status(200).json({
+      user : {
+        id : req.user._id,
+        username : req.user.username,
+        email: req.user.email,
+        isVerified: req.user.isVerified,
+        createdAt: req.user.createdAt,
+      }
+  });
+    
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to retrieve profile' });
+  }
+
+};
+
 module.exports = {
   signup,
   verifyEmail,
@@ -276,4 +297,5 @@ module.exports = {
   logout,
   forgotPassword,
   resetPassword,
+  getMe,
 };
