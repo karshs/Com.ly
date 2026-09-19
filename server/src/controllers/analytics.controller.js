@@ -61,10 +61,10 @@ const getLinkOverview = async (req, res) => {
       const currentClick = allClicks[i];
 
       // Track unique IP entries
-      uniqueIpHashes.add(currentClick.deviceType); 
+      uniqueIpHashes.add(currentClick.ipHash); 
 
       
-      const dev = currentClick.deviceType || 'Unknown';
+      const dev = currentClick.device || 'Unknown';
       if (!deviceCounts[dev]) {
         deviceCounts[dev] = 1;
       } else {
@@ -215,7 +215,7 @@ async function getDeviceDistribution(req, res) {
       const clickRecord = allClicks[i];
       
       // Look up deviceType field (Mandatory telemetry key constraint!)
-      const deviceName = clickRecord.deviceType || 'Unknown';
+      const deviceName = clickRecord.device || 'Unknown';
 
       if (!deviceFrequencyMap[deviceName]) {
         deviceFrequencyMap[deviceName] = 1; // Seed initial click count
