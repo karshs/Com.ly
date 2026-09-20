@@ -76,16 +76,27 @@
 
 .links-search-input {
   width: 100%;
-  padding: 8px 12px 8px 34px;
+  padding: 8px 12px 8px 36px;
   font-size: 13px;
+  font-family: inherit;
   border: 1px solid var(--border-color);
   border-radius: var(--radius-sm);
   background-color: #ffffff;
+  color: var(--text-main);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.links-search-input:focus {
+  outline: none;
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 3px rgba(11, 78, 199, 0.12);
 }
 
 .links-search-icon {
   position: absolute;
-  left: 10px;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
   color: var(--text-light);
   pointer-events: none;
 }
@@ -131,9 +142,11 @@
   font-weight: 700;
   color: var(--primary);
   text-decoration: none;
+  transition: color 0.15s ease;
 }
 
 .link-short-url:hover {
+  color: var(--primary-hover);
   text-decoration: underline;
 }
 
@@ -150,8 +163,8 @@
 }
 
 .btn-icon-copy:hover {
-  background-color: #f1f5f9;
-  color: var(--text-main);
+  background-color: #edf4fe;
+  color: var(--primary);
 }
 
 .link-destination-row {
@@ -177,7 +190,7 @@
 }
 
 .btn-action-icon {
-  background-color: #f8fafc;
+  background-color: #ffffff;
   border: 1px solid var(--border-color);
   border-radius: var(--radius-sm);
   padding: 8px;
@@ -191,10 +204,11 @@
 }
 
 .btn-action-icon:hover {
-  background-color: #f1f5f9;
+  background-color: #edf4fe;
   color: var(--primary);
   border-color: #cbd5e1;
 }
+
 
 .btn-action-icon.btn-delete:hover {
   background-color: var(--danger-bg);

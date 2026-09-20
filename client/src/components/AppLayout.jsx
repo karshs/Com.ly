@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { NavLink, Outlet, Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { CreateLinkModal } from './CreateLinkModal';
@@ -9,6 +9,7 @@ import {
   Plus,
   LogOut,
   Search,
+  ExternalLink,
 } from 'lucide-react';
 import './AppLayout.css';
 
@@ -16,11 +17,25 @@ export const AppLayout = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const userMenuRef = useRef(null);
 
   const handleLogout = async () => {
     await logout();
     navigate('/login');
   };
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (userMenuRef.current && !userMenuRef.current.contains(e.target)) {
+        setIsUserMenuOpen(false);
+      }
+    };
+    if (isUserMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [isUserMenuOpen]);
 
   const initial = user?.username ? user.username.charAt(0).toUpperCase() : 'U';
 
@@ -29,10 +44,11 @@ export const AppLayout = () => {
       {/* Sidebar Navigation */}
       <aside className="app-sidebar">
         <div className="sidebar-brand">
-          <Link to="/dashboard" className="sidebar-logo">
-            com<span>.</span>ly
+          <Link to="/dashboard" className="sidebar-logo" title="Com.ly">
+            <img src="/logo.png" alt="Comly" className="sidebar-logo-img" />
           </Link>
         </div>
+
 
         <div className="sidebar-action">
           <button
@@ -104,10 +120,69 @@ export const AppLayout = () => {
             />
           </div>
 
-          <div className="header-actions">
-            <div className="header-avatar" title={user?.email}>
-              {initial}
-            </div>
+          <div className="header-actions" ref={userMenuRef}>
+            <button
+              type="button"
+              className="header-avatar-btn"
+              onClick={() => setIsUserMenuOpen((prev) => !prev)}
+              aria-label="User profile menu"
+            >
+              <div className="header-avatar" title={user?.email}>
+                {initial}
+              </div>
+            </button>
+
+            {isUserMenuOpen && (
+              <div className="user-dropdown-menu">
+                <div className="user-dropdown-header">
+                  <div className="user-dropdown-avatar">{initial}</div>
+                  <div className="user-dropdown-details">
+                    <span className="user-dropdown-name">{user?.username || 'User'}</span>
+                    <span className="user-dropdown-email">{user?.email || ''}</span>
+                  </div>
+                </div>
+
+                <div className="user-dropdown-divider" />
+
+                <div className="user-dropdown-links">
+                  <Link
+                    to="/bio-builder"
+                    className="user-dropdown-item"
+                    onClick={() => setIsUserMenuOpen(false)}
+                  >
+                    <LayoutTemplate size={16} />
+                    <span>Bio Hub Customizer</span>
+                  </Link>
+
+                  {user?.username && (
+                    <a
+                      href={`/bio/${user.username}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="user-dropdown-item"
+                      onClick={() => setIsUserMenuOpen(false)}
+                    >
+                      <ExternalLink size={16} />
+                      <span>View Public Bio</span>
+                    </a>
+                  )}
+                </div>
+
+                <div className="user-dropdown-divider" />
+
+                <button
+                  type="button"
+                  className="user-dropdown-item user-dropdown-logout"
+                  onClick={() => {
+                    setIsUserMenuOpen(false);
+                    handleLogout();
+                  }}
+                >
+                  <LogOut size={16} />
+                  <span>Log out</span>
+                </button>
+              </div>
+            )}
           </div>
         </header>
 
@@ -116,6 +191,7 @@ export const AppLayout = () => {
           <Outlet />
         </main>
       </div>
+
 
       {/* Global Quick Create Modal */}
       <CreateLinkModal

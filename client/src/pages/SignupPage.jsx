@@ -2,13 +2,14 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { getErrorMessage } from '../utils/error';
-import { Link as LinkIcon, QrCode, CheckCircle, ArrowRight } from 'lucide-react';
+import { Link as LinkIcon, Eye, EyeOff, CheckCircle, ArrowRight } from 'lucide-react';
 import './Auth.css';
 
 export const SignupPage = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
   const [devVerifyToken, setDevVerifyToken] = useState('');
@@ -37,11 +38,14 @@ export const SignupPage = () => {
 
   return (
     <div className="auth-container">
-      {/* Left Form */}
+      {/* Left Form Section */}
       <div className="auth-form-section">
-        <Link to="/" className="auth-logo">
-          com<span>.</span>ly
-        </Link>
+        <div>
+          <Link to="/" className="auth-logo">
+            <img src="/logo.png" alt="Comly" style={{ height: '48px', width: 'auto', display: 'block' }} />
+          </Link>
+        </div>
+
 
         <div className="auth-card">
           <h1 className="auth-title">Create your account</h1>
@@ -49,10 +53,10 @@ export const SignupPage = () => {
             Already have an account? <Link to="/login">Log in</Link>
           </p>
 
-          {error && <div className="alert alert-danger">{error}</div>}
+          {error && <div className="alert alert-danger" style={{ marginBottom: '20px' }}>{error}</div>}
 
           {successMsg ? (
-            <div className="alert alert-success" style={{ flexDirection: 'column', alignItems: 'flex-start', gap: '12px', padding: '18px' }}>
+            <div className="alert alert-success" style={{ flexDirection: 'column', alignItems: 'flex-start', gap: '12px', padding: '18px', borderRadius: '12px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 700, fontSize: '15px' }}>
                 <CheckCircle size={20} /> {successMsg}
               </div>
@@ -64,91 +68,146 @@ export const SignupPage = () => {
                   </p>
                   <Link
                     to={`/verify/${devVerifyToken}`}
-                    className="btn btn-primary btn-sm"
-                    style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}
+                    className="auth-submit-btn"
+                    style={{ display: 'inline-flex', padding: '10px 16px', fontSize: '14px', width: 'auto', textDecoration: 'none' }}
                   >
-                    Verify Email Now <ArrowRight size={14} />
+                    <span>Verify Email Now</span>
+                    <ArrowRight size={14} />
                   </Link>
                 </div>
               )}
             </div>
           ) : (
             <form onSubmit={handleSubmit}>
-              <div className="form-group">
-                <label className="form-label" htmlFor="username">Username</label>
-                <input
-                  id="username"
-                  type="text"
-                  className="form-input"
-                  placeholder="e.g. rohan"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  required
-                />
+              <div className="auth-form-group">
+                <label className="auth-form-label" htmlFor="username">Username</label>
+                <div className="auth-input-wrapper">
+                  <input
+                    id="username"
+                    type="text"
+                    className="auth-input"
+                    placeholder="e.g. rohan"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    required
+                  />
+                </div>
               </div>
 
-              <div className="form-group">
-                <label className="form-label" htmlFor="email">Email</label>
-                <input
-                  id="email"
-                  type="email"
-                  className="form-input"
-                  placeholder="name@example.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                />
+              <div className="auth-form-group">
+                <label className="auth-form-label" htmlFor="email">Email address</label>
+                <div className="auth-input-wrapper">
+                  <input
+                    id="email"
+                    type="email"
+                    className="auth-input"
+                    placeholder="name@example.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                  />
+                </div>
               </div>
 
-              <div className="form-group">
-                <label className="form-label" htmlFor="password">Password</label>
-                <input
-                  id="password"
-                  type="password"
-                  className="form-input"
-                  placeholder="6+ characters"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  minLength={6}
-                  required
-                />
+              <div className="auth-form-group">
+                <label className="auth-form-label" htmlFor="password">Password</label>
+                <div className="auth-input-wrapper">
+                  <input
+                    id="password"
+                    type={showPassword ? 'text' : 'password'}
+                    className="auth-input"
+                    placeholder="6+ characters"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    minLength={6}
+                    required
+                  />
+                  <button
+                    type="button"
+                    className="auth-input-toggle-btn"
+                    onClick={() => setShowPassword(!showPassword)}
+                    aria-label={showPassword ? 'Hide password' : 'Show password'}
+                  >
+                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+                </div>
               </div>
 
               <button
                 type="submit"
-                className="btn btn-primary btn-block"
+                className="auth-submit-btn"
                 disabled={loading}
-                style={{ marginTop: '12px' }}
               >
-                {loading ? 'Creating account...' : 'Create free account'}
+                <span>{loading ? 'Creating account...' : 'Create account'}</span>
+                {!loading && <ArrowRight size={17} />}
               </button>
             </form>
           )}
         </div>
 
         <div className="auth-terms">
-          By creating an account, you agree to Com.ly's Terms of Service and Privacy Policy.
+          By signing up, you agree to Com.ly's <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
         </div>
       </div>
 
-      {/* Right Brand Panel */}
+      {/* Right Brand Showcase Panel */}
       <div className="auth-side-panel">
-        <div className="auth-graphic">
-          <div className="auth-graphic-chip">
-            <LinkIcon size={14} style={{ display: 'inline', marginRight: 4 }} />
-            com.ly/SFlivingShop
+        <div className="auth-showcase-container">
+          <div className="auth-graphic-card">
+            <div className="auth-graphic-pill">
+              <LinkIcon size={14} />
+              <span>com.ly/my-portfolio</span>
+            </div>
+            
+            <div className="auth-graphic-qr-box">
+              <svg width="128" height="128" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                {/* Top Left Corner Marker */}
+                <rect x="10" y="10" width="34" height="34" rx="8" stroke="#0f172a" strokeWidth="6" />
+                <rect x="21" y="21" width="12" height="12" rx="3" fill="#0f172a" />
+                
+                {/* Top Right Corner Marker */}
+                <rect x="76" y="10" width="34" height="34" rx="8" stroke="#0f172a" strokeWidth="6" />
+                <rect x="87" y="21" width="12" height="12" rx="3" fill="#0f172a" />
+                
+                {/* Bottom Left Corner Marker */}
+                <rect x="10" y="76" width="34" height="34" rx="8" stroke="#0f172a" strokeWidth="6" />
+                <rect x="21" y="87" width="12" height="12" rx="3" fill="#0f172a" />
+                
+                {/* Center Amber Accent */}
+                <circle cx="60" cy="60" r="10" stroke="#f59e0b" strokeWidth="5" />
+                <circle cx="60" cy="60" r="3" fill="#f59e0b" />
+                
+                {/* Decorative QR Pattern Dots */}
+                <rect x="56" y="14" width="8" height="8" rx="2" fill="#0f172a" />
+                <rect x="56" y="28" width="8" height="8" rx="2" fill="#0f172a" />
+                <rect x="14" y="56" width="8" height="8" rx="2" fill="#0f172a" />
+                <rect x="28" y="56" width="8" height="8" rx="2" fill="#0f172a" />
+                
+                <rect x="84" y="56" width="8" height="8" rx="2" fill="#0f172a" />
+                <rect x="98" y="56" width="8" height="8" rx="2" fill="#0f172a" />
+                <rect x="56" y="84" width="8" height="8" rx="2" fill="#0f172a" />
+                <rect x="56" y="98" width="8" height="8" rx="2" fill="#0f172a" />
+                <rect x="76" y="76" width="8" height="8" rx="2" fill="#0f172a" />
+                <rect x="98" y="76" width="8" height="8" rx="2" fill="#0f172a" />
+                <rect x="84" y="92" width="8" height="8" rx="2" fill="#0f172a" />
+                <rect x="98" y="98" width="8" height="8" rx="2" fill="#0f172a" />
+              </svg>
+            </div>
+
+            <div className="auth-graphic-footer">
+              <span className="auth-dot">•</span> Instant QR & Bio Page
+            </div>
           </div>
-          <div className="auth-graphic-qr">
-            <QrCode size={90} color="#0f172a" />
-          </div>
-          <p style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-main)' }}>
-            Power your online brand
+
+          <h2 className="auth-side-headline">
+            Power your links, QR Codes, and bio pages with Com.ly
+          </h2>
+          <p className="auth-side-subtext">
+            Clean URLs, memorable QR codes, and lightweight bio profiles tailored to your brand.
           </p>
         </div>
-        <h2 className="auth-side-tagline">
-          Power your links, QR Codes, and bio pages with Com.ly
-        </h2>
       </div>
     </div>
   );
 };
+

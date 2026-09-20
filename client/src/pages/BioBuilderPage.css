@@ -25,16 +25,21 @@
   gap: 8px;
   background-color: var(--primary-light);
   color: var(--primary);
+  border: 1px solid #d0e1fd;
   padding: 8px 16px;
   border-radius: var(--radius-full);
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 700;
   text-decoration: none;
 }
 
 .bio-public-badge:hover {
-  text-decoration: underline;
+  background-color: #dbeafe;
+  color: var(--primary-hover);
+  text-decoration: none;
 }
+
+
 
 /* Two-Column Editor Layout */
 .bio-builder-grid {

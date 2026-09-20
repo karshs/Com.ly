@@ -2,11 +2,13 @@ import { useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { authApi } from '../api/auth.api';
 import { getErrorMessage } from '../utils/error';
+import { Eye, EyeOff, ArrowRight } from 'lucide-react';
 import './Auth.css';
 
 export const ResetPasswordPage = () => {
   const { token } = useParams();
   const [newPassword, setNewPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -30,35 +32,58 @@ export const ResetPasswordPage = () => {
 
   return (
     <div className="auth-container">
-      <div className="auth-form-section" style={{ margin: 'auto', maxWidth: '500px' }}>
-        <Link to="/" className="auth-logo">com<span>.</span>ly</Link>
-        <div className="auth-card">
+      <div className="auth-form-section" style={{ margin: 'auto', maxWidth: '480px', justifyContent: 'center' }}>
+        <div style={{ marginBottom: '24px' }}>
+          <Link to="/" className="auth-logo">
+            <img src="/logo.png" alt="Comly" style={{ height: '48px', width: 'auto', display: 'block' }} />
+          </Link>
+        </div>
+
+
+        <div className="auth-card" style={{ margin: 0, padding: 0 }}>
           <h1 className="auth-title">Set new password</h1>
           <p className="auth-subtitle">Enter your new secure password below.</p>
 
-          {error && <div className="alert alert-danger">{error}</div>}
-          {message && <div className="alert alert-success">{message}</div>}
+          {error && <div className="alert alert-danger" style={{ marginBottom: '20px' }}>{error}</div>}
+          {message && <div className="alert alert-success" style={{ marginBottom: '20px' }}>{message}</div>}
 
           <form onSubmit={handleSubmit}>
-            <div className="form-group">
-              <label className="form-label" htmlFor="newPassword">New Password</label>
-              <input
-                id="newPassword"
-                type="password"
-                className="form-input"
-                placeholder="6+ characters"
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
-                minLength={6}
-                required
-              />
+            <div className="auth-form-group">
+              <label className="auth-form-label" htmlFor="newPassword">New Password</label>
+              <div className="auth-input-wrapper">
+                <input
+                  id="newPassword"
+                  type={showPassword ? 'text' : 'password'}
+                  className="auth-input"
+                  placeholder="6+ characters"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  minLength={6}
+                  required
+                />
+                <button
+                  type="button"
+                  className="auth-input-toggle-btn"
+                  onClick={() => setShowPassword(!showPassword)}
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
+                >
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              </div>
             </div>
-            <button type="submit" className="btn btn-primary btn-block" disabled={loading}>
-              {loading ? 'Updating password...' : 'Update password'}
+
+            <button type="submit" className="auth-submit-btn" disabled={loading}>
+              <span>{loading ? 'Updating password...' : 'Update password'}</span>
+              {!loading && <ArrowRight size={17} />}
             </button>
           </form>
+
+          <div style={{ marginTop: '24px', textAlign: 'center', fontSize: '14px' }}>
+            <Link to="/login" className="auth-link">← Back to log in</Link>
+          </div>
         </div>
       </div>
     </div>
   );
 };
+

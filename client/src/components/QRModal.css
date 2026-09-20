@@ -16,18 +16,21 @@
 
 .qr-link-display {
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--primary);
   word-break: break-all;
   margin-bottom: 20px;
-  padding: 8px 12px;
-  background: var(--primary-light);
+  padding: 8px 14px;
+  background: #edf4fe;
+  border: 1px solid #d0e1fd;
   border-radius: var(--radius-sm);
   width: 100%;
 }
+
 
 .qr-actions {
   display: flex;
   gap: 12px;
   width: 100%;
 }
+
