@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { linkApi } from '../api/link.api';
+import { useToast } from '../hooks/useToast';
 import { QRModal } from '../components/QRModal';
 import { getErrorMessage } from '../utils/error';
 import {
@@ -18,6 +19,7 @@ import {
 import './DashboardPage.css';
 
 export const DashboardPage = () => {
+  const { showToast } = useToast();
   const [links, setLinks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
@@ -30,7 +32,6 @@ export const DashboardPage = () => {
   const [customSlug, setCustomSlug] = useState('');
   const [creating, setCreating] = useState(false);
   const [formError, setFormError] = useState('');
-  const [formSuccess, setFormSuccess] = useState('');
 
   // Copy feedback state { [linkId]: true }
   const [copiedMap, setCopiedMap] = useState({});
@@ -69,12 +70,11 @@ export const DashboardPage = () => {
   const handleCreate = async (e) => {
     e.preventDefault();
     setFormError('');
-    setFormSuccess('');
     setCreating(true);
 
     try {
       await linkApi.createLink({ originalUrl, customSlug });
-      setFormSuccess('Link created successfully!');
+      showToast('Link created successfully!', 'success');
       setOriginalUrl('');
       setCustomSlug('');
       setPage(1);
@@ -90,6 +90,7 @@ export const DashboardPage = () => {
     if (!window.confirm('Are you sure you want to delete this short link?')) return;
     try {
       await linkApi.deleteLink(id);
+      showToast('Link deleted successfully!', 'success');
       fetchLinks(page, search);
     } catch (err) {
       alert(getErrorMessage(err, 'Failed to delete link'));
@@ -100,13 +101,14 @@ export const DashboardPage = () => {
     const url = link.shortUrl || `http://localhost:5000/r/${link.shortCode}`;
     navigator.clipboard.writeText(url);
     setCopiedMap((prev) => ({ ...prev, [link._id || link.id]: true }));
+    showToast('Link copied to clipboard!', 'success', 2000);
     setTimeout(() => {
       setCopiedMap((prev) => ({ ...prev, [link._id || link.id]: false }));
     }, 2000);
   };
 
   return (
-    <div className="dashboard-container">
+    <div className="dashboard-container page-fade-in">
       {/* Quick Create Card */}
       <section className="create-card">
         <div className="create-card-header">
@@ -114,7 +116,6 @@ export const DashboardPage = () => {
         </div>
 
         {formError && <div className="alert alert-danger">{formError}</div>}
-        {formSuccess && <div className="alert alert-success">{formSuccess}</div>}
 
         <form onSubmit={handleCreate}>
           <div className="create-form-row">
@@ -171,7 +172,7 @@ export const DashboardPage = () => {
 
         {/* Link Cards List */}
         {loading ? (
-          <div className="empty-state">Loading your links...</div>
+          <div className="spinner" />
         ) : links.length === 0 ? (
           <div className="empty-state">
             <Link2 size={36} color="var(--text-light)" style={{ margin: '0 auto 12px' }} />

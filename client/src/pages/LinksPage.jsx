@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { linkApi } from '../api/link.api';
+import { useToast } from '../hooks/useToast';
 import { QRModal } from '../components/QRModal';
 import { getErrorMessage } from '../utils/error';
 import {
@@ -18,6 +19,7 @@ import {
 import './DashboardPage.css';
 
 export const LinksPage = () => {
+  const { showToast } = useToast();
   const [links, setLinks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
@@ -63,6 +65,7 @@ export const LinksPage = () => {
     if (!window.confirm('Are you sure you want to delete this short link?')) return;
     try {
       await linkApi.deleteLink(id);
+      showToast('Link deleted successfully!', 'success');
       fetchLinks(page, search);
     } catch (err) {
       alert(getErrorMessage(err, 'Failed to delete link'));
@@ -73,13 +76,15 @@ export const LinksPage = () => {
     const url = link.shortUrl || `http://localhost:5000/r/${link.shortCode}`;
     navigator.clipboard.writeText(url);
     setCopiedMap((prev) => ({ ...prev, [link._id || link.id]: true }));
+    showToast('Link copied to clipboard!', 'success', 2000);
     setTimeout(() => {
       setCopiedMap((prev) => ({ ...prev, [link._id || link.id]: false }));
     }, 2000);
   };
 
+
   return (
-    <div className="dashboard-container">
+    <div className="dashboard-container page-fade-in">
       <section className="links-section">
         <div className="links-header">
           <h2 className="links-title">
@@ -100,7 +105,7 @@ export const LinksPage = () => {
 
         {/* Link Cards List */}
         {loading ? (
-          <div className="empty-state">Loading your links...</div>
+          <div className="spinner" />
         ) : links.length === 0 ? (
           <div className="empty-state">
             <Link2 size={36} color="var(--text-light)" style={{ margin: '0 auto 12px' }} />

@@ -56,20 +56,10 @@ export const AnalyticsPage = () => {
     }
   }, [linkId]);
 
-  if (loading) {
-    return (
-      <div className="analytics-container">
-        <p style={{ color: 'var(--text-muted)', textAlign: 'center', padding: 40 }}>
-          Loading link analytics...
-        </p>
-      </div>
-    );
-  }
-
   if (error) {
     return (
-      <div className="analytics-container">
-        <Link to="/dashboard" className="analytics-back-link">
+      <div className="analytics-container page-fade-in">
+        <Link to="/links" className="analytics-back-link">
           <ArrowLeft size={16} /> Back to Links
         </Link>
         <div className="alert alert-danger">{error}</div>
@@ -78,10 +68,10 @@ export const AnalyticsPage = () => {
   }
 
   return (
-    <div className="analytics-container">
+    <div className="analytics-container page-fade-in">
       {/* Top Navigation */}
       <div className="analytics-top-nav">
-        <Link to="/dashboard" className="analytics-back-link">
+        <Link to="/links" className="analytics-back-link">
           <ArrowLeft size={16} /> Back to all links
         </Link>
       </div>
@@ -90,8 +80,12 @@ export const AnalyticsPage = () => {
         <h1 className="analytics-title">Performance Overview</h1>
       </div>
 
-      {/* Overview Stat Cards */}
-      <div className="analytics-stats-grid">
+      {loading ? (
+        <div className="spinner" />
+      ) : (
+        <>
+          {/* Overview Stat Cards */}
+          <div className="analytics-stats-grid">
         <div className="stat-card">
           <span className="stat-label">Total Engagements</span>
           <span className="stat-value">{overview?.totalClicks || 0}</span>
@@ -221,6 +215,8 @@ export const AnalyticsPage = () => {
           </div>
         </div>
       </div>
+      </>
+      )}
     </div>
   );
 };

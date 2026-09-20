@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { bioApi } from '../api/bio.api';
 import { useAuth } from '../context/AuthContext';
+import { useToast } from '../hooks/useToast';
 import {
   ExternalLink,
   Plus,
@@ -9,15 +10,14 @@ import {
   ArrowUp,
   ArrowDown,
   Save,
-  CheckCircle,
 } from 'lucide-react';
 import './BioBuilderPage.css';
 
 export const BioBuilderPage = () => {
   const { user } = useAuth();
+  const { showToast } = useToast();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [savedSuccess, setSavedSuccess] = useState(false);
   const [error, setError] = useState('');
 
   // Bio Form State
@@ -82,7 +82,6 @@ export const BioBuilderPage = () => {
     e.preventDefault();
     setSaving(true);
     setError('');
-    setSavedSuccess(false);
 
     try {
       await bioApi.updateMyBio({
@@ -92,8 +91,7 @@ export const BioBuilderPage = () => {
         theme,
         links,
       });
-      setSavedSuccess(true);
-      setTimeout(() => setSavedSuccess(false), 3000);
+      showToast('Profile updated successfully!', 'success');
     } catch (err) {
       setError(err.response?.data?.error?.message || err.response?.data?.message || 'Failed to update bio profile');
     } finally {
@@ -103,18 +101,8 @@ export const BioBuilderPage = () => {
 
   const publicBioUrl = `/bio/${user?.username}`;
 
-  if (loading) {
-    return (
-      <div className="bio-builder-container">
-        <p style={{ textAlign: 'center', padding: 40, color: 'var(--text-muted)' }}>
-          Loading your Bio Hub...
-        </p>
-      </div>
-    );
-  }
-
   return (
-    <div className="bio-builder-container">
+    <div className="bio-builder-container page-fade-in">
       {/* Top Header */}
       <div className="bio-builder-top">
         <h1 className="bio-builder-title">Bio Hub Customizer</h1>
@@ -126,15 +114,13 @@ export const BioBuilderPage = () => {
         )}
       </div>
 
-      {savedSuccess && (
-        <div className="alert alert-success" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <CheckCircle size={18} /> Profile updated successfully!
-        </div>
-      )}
       {error && <div className="alert alert-danger">{error}</div>}
 
-      <div className="bio-builder-grid">
-        {/* Left Column: Editor Form */}
+      {loading ? (
+        <div className="spinner" />
+      ) : (
+        <div className="bio-builder-grid">
+          {/* Left Column: Editor Form */}
         <form onSubmit={handleSave} className="bio-editor-card">
           {/* Section: Profile Info */}
           <div>
@@ -326,6 +312,7 @@ export const BioBuilderPage = () => {
           </div>
         </div>
       </div>
+      )}
     </div>
   );
 };

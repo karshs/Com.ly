@@ -1,14 +1,46 @@
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import QRCode from 'react-qr-code';
 import { X, Download, Copy, Check } from 'lucide-react';
 import './QRModal.css';
 
+
 export const QRModal = ({ isOpen, onClose, link }) => {
   const [copied, setCopied] = useState(false);
+  const [isClosing, setIsClosing] = useState(false);
+  const [activeLink, setActiveLink] = useState(link);
 
-  if (!isOpen || !link) return null;
+  useEffect(() => {
+    if (isOpen && link) {
+      setActiveLink(link);
+      setIsClosing(false);
+    }
+  }, [isOpen, link]);
 
-  const shortUrl = link.shortUrl || `http://localhost:5000/r/${link.shortCode}`;
+  const handleClose = useCallback(() => {
+    if (isClosing) return;
+    setIsClosing(true);
+    setTimeout(() => {
+      setIsClosing(false);
+      onClose();
+    }, 200);
+  }, [isClosing, onClose]);
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') handleClose();
+    };
+    if (isOpen) {
+      window.addEventListener('keydown', handleKeyDown);
+    }
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, handleClose]);
+
+
+  if (!isOpen && !isClosing) return null;
+  if (!activeLink) return null;
+
+  const shortUrl = activeLink.shortUrl || `http://localhost:5000/r/${activeLink.shortCode}`;
 
   const handleCopy = () => {
     navigator.clipboard.writeText(shortUrl);
@@ -24,19 +56,19 @@ export const QRModal = ({ isOpen, onClose, link }) => {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `comly-qr-${link.shortCode}.svg`;
+    a.download = `comly-qr-${activeLink.shortCode}.svg`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
   };
 
-  return (
-    <div className="modal-overlay" onClick={onClose}>
+  const modalElement = (
+    <div className={`modal-overlay ${isClosing ? 'modal-exit' : ''}`} onClick={handleClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
           <h3 style={{ fontSize: '18px', fontWeight: 700 }}>QR Code</h3>
-          <button className="modal-close" onClick={onClose}>
+          <button className="modal-close" onClick={handleClose}>
             <X size={20} />
           </button>
         </div>
@@ -77,4 +109,9 @@ export const QRModal = ({ isOpen, onClose, link }) => {
       </div>
     </div>
   );
+
+  return typeof document !== 'undefined'
+    ? createPortal(modalElement, document.body)
+    : null;
 };
+
