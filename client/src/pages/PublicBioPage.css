@@ -1,0 +1,146 @@
+/* Standalone Public Bio Page */
+.public-bio-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 48px 20px 24px;
+}
+
+.public-bio-content {
+  width: 100%;
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.public-avatar {
+  width: 96px;
+  height: 96px;
+  border-radius: 9999px;
+  object-fit: cover;
+  margin-bottom: 16px;
+  border: 3px solid #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.public-avatar-placeholder {
+  width: 96px;
+  height: 96px;
+  border-radius: 9999px;
+  background-color: var(--primary);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36px;
+  font-weight: 800;
+  margin-bottom: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.public-name {
+  font-size: 22px;
+  font-weight: 800;
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+.public-bio-text {
+  font-size: 14px;
+  text-align: center;
+  line-height: 1.5;
+  margin-bottom: 32px;
+  opacity: 0.9;
+  max-width: 400px;
+}
+
+.public-links-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.public-link-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 20px;
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: 12px;
+  text-decoration: none;
+  transition: all 0.2s ease-in-out;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.public-link-button:hover {
+  transform: translateY(-2px);
+  text-decoration: none;
+}
+
+/* Themes */
+.public-theme-minimal-light {
+  background-color: #f8fafc;
+  color: #0f172a;
+}
+
+.public-theme-minimal-light .public-link-button {
+  background-color: #ffffff;
+  color: #0f172a;
+  border: 1px solid #e2e8f0;
+}
+
+.public-theme-minimal-light .public-link-button:hover {
+  border-color: #0c56e9;
+  box-shadow: 0 6px 16px rgba(12, 86, 233, 0.12);
+}
+
+.public-theme-dark-slate {
+  background-color: #0f172a;
+  color: #ffffff;
+}
+
+.public-theme-dark-slate .public-link-button {
+  background-color: #1e293b;
+  color: #ffffff;
+  border: 1px solid #334155;
+}
+
+.public-theme-dark-slate .public-link-button:hover {
+  background-color: #334155;
+  border-color: #64748b;
+}
+
+.public-theme-gradient {
+  background: linear-gradient(135deg, #3730a3 0%, #6366f1 40%, #a855f7 100%);
+  color: #ffffff;
+}
+
+.public-theme-gradient .public-link-button {
+  background-color: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(10px);
+}
+
+.public-theme-gradient .public-link-button:hover {
+  background-color: rgba(255, 255, 255, 0.25);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+/* Footer */
+.public-bio-footer {
+  margin-top: 48px;
+  font-size: 13px;
+  opacity: 0.7;
+}
+
+.public-bio-footer a {
+  font-weight: 700;
+  color: inherit;
+  text-decoration: underline;
+}

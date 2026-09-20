@@ -10,10 +10,12 @@ import { SignupPage } from './pages/SignupPage';
 import { VerifyEmailPage } from './pages/VerifyEmailPage';
 import { ForgotPasswordPage } from './pages/ForgotPasswordPage';
 import { ResetPasswordPage } from './pages/ResetPasswordPage';
+import { PublicBioPage } from './pages/PublicBioPage';
 
 // Protected Pages
 import { DashboardPage } from './pages/DashboardPage';
 import { AnalyticsPage } from './pages/AnalyticsPage';
+import { BioBuilderPage } from './pages/BioBuilderPage';
 
 function App() {
   return (
@@ -27,12 +29,14 @@ function App() {
           <Route path="/verify/:token" element={<VerifyEmailPage />} />
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
           <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
+          <Route path="/bio/:username" element={<PublicBioPage />} />
 
           {/* Protected App Routes */}
           <Route element={<ProtectedRoute />}>
             <Route element={<AppLayout />}>
               <Route path="/dashboard" element={<DashboardPage />} />
               <Route path="/analytics/:linkId" element={<AnalyticsPage />} />
+              <Route path="/bio-builder" element={<BioBuilderPage />} />
             </Route>
           </Route>
 
