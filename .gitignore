@@ -18,7 +18,9 @@ dist/
 build/
 
 
-#  OS / Editor
+# OS / Editor
 .DS_Store
 Thumbs.db
 .vscode/settings.json
+inspiration_Readme.md
+
