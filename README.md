@@ -1,20 +1,25 @@
-# Com.ly — Branded Short-Link & Bio-Link Hub
+
 
 <p align="center">
   <img src="client/public/banner.png" alt="Comly Banner" width="100%" />
 </p>
 
+<h1 align="center">Com.ly</h1>
+
 <p align="center">
-  <strong>A high-performance URL shortening engine with custom vanity slugs, real-time click telemetry analytics, dynamic QR codes, and a Link-in-Bio creator hub.</strong>
+  <strong>Modern Short-Link & Link-in-Bio Creator Hub</strong>
+  <br />
+  High-performance URL engine with custom vanity slugs, real-time click telemetry, dynamic QR codes, and customizable creator bios.
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/React-19.0-blue?style=flat-square&logo=react" alt="React 19" />
-  <img src="https://img.shields.io/badge/Vite-6.0-purple?style=flat-square&logo=vite" alt="Vite" />
-  <img src="https://img.shields.io/badge/Node.js-18+-green?style=flat-square&logo=node.js" alt="Node.js" />
-  <img src="https://img.shields.io/badge/Express-4.21-lightgrey?style=flat-square&logo=express" alt="Express" />
-  <img src="https://img.shields.io/badge/MongoDB-Mongoose-emerald?style=flat-square&logo=mongodb" alt="MongoDB" />
-  <img src="https://img.shields.io/badge/JWT-Pair_Token_Auth-yellow?style=flat-square&logo=jsonwebtokens" alt="JWT" />
+  <img src="https://img.shields.io/badge/REACT-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React" />
+  <img src="https://img.shields.io/badge/VITE-646CFF?style=for-the-badge&logo=vite&logoColor=white" alt="Vite" />
+  <img src="https://img.shields.io/badge/NODE.JS-339933?style=for-the-badge&logo=node.js&logoColor=white" alt="Node.js" />
+  <img src="https://img.shields.io/badge/EXPRESS-000000?style=for-the-badge&logo=express&logoColor=white" alt="Express" />
+  <img src="https://img.shields.io/badge/MONGODB-47A248?style=for-the-badge&logo=mongodb&logoColor=white" alt="MongoDB" />
+  <img src="https://img.shields.io/badge/TAILWIND_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind CSS" />
+  <img src="https://img.shields.io/badge/LICENSE-MIT-green?style=for-the-badge" alt="License MIT" />
 </p>
 
 ---
