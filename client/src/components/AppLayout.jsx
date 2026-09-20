@@ -1,5 +1,7 @@
+import { useState } from 'react';
 import { NavLink, Outlet, Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { CreateLinkModal } from './CreateLinkModal';
 import {
   Home,
   Link2,
@@ -13,6 +15,7 @@ import './AppLayout.css';
 export const AppLayout = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
   const handleLogout = async () => {
     await logout();
@@ -32,10 +35,14 @@ export const AppLayout = () => {
         </div>
 
         <div className="sidebar-action">
-          <Link to="/dashboard" className="btn btn-primary sidebar-btn-create">
+          <button
+            type="button"
+            className="btn btn-primary sidebar-btn-create"
+            onClick={() => setIsCreateModalOpen(true)}
+          >
             <Plus size={18} />
             <span>Create new</span>
-          </Link>
+          </button>
         </div>
 
         <nav className="sidebar-nav">
@@ -49,7 +56,7 @@ export const AppLayout = () => {
           </NavLink>
 
           <NavLink
-            to="/dashboard"
+            to="/links"
             className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
           >
             <Link2 size={18} />
@@ -67,7 +74,7 @@ export const AppLayout = () => {
 
         {/* User Profile & Logout at bottom */}
         <div className="sidebar-footer">
-          <div className="user-profile-badge">
+          <div className="user-profile-badge" title={`${user?.username} (${user?.email})`}>
             <div className="user-avatar">{initial}</div>
             <div className="user-info">
               <span className="user-name">{user?.username || 'User'}</span>
@@ -109,6 +116,16 @@ export const AppLayout = () => {
           <Outlet />
         </main>
       </div>
+
+      {/* Global Quick Create Modal */}
+      <CreateLinkModal
+        isOpen={isCreateModalOpen}
+        onClose={() => setIsCreateModalOpen(false)}
+        onLinkCreated={() => {
+          // If already on dashboard or links, reload/dispatch event
+          window.dispatchEvent(new CustomEvent('comly:link-created'));
+        }}
+      />
     </div>
   );
 };

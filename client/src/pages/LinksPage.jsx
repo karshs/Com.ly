@@ -17,20 +17,13 @@ import {
 } from 'lucide-react';
 import './DashboardPage.css';
 
-export const DashboardPage = () => {
+export const LinksPage = () => {
   const [links, setLinks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
-
-  // Form State
-  const [originalUrl, setOriginalUrl] = useState('');
-  const [customSlug, setCustomSlug] = useState('');
-  const [creating, setCreating] = useState(false);
-  const [formError, setFormError] = useState('');
-  const [formSuccess, setFormSuccess] = useState('');
 
   // Copy feedback state { [linkId]: true }
   const [copiedMap, setCopiedMap] = useState({});
@@ -66,26 +59,6 @@ export const DashboardPage = () => {
     fetchLinks(1, search);
   };
 
-  const handleCreate = async (e) => {
-    e.preventDefault();
-    setFormError('');
-    setFormSuccess('');
-    setCreating(true);
-
-    try {
-      await linkApi.createLink({ originalUrl, customSlug });
-      setFormSuccess('Link created successfully!');
-      setOriginalUrl('');
-      setCustomSlug('');
-      setPage(1);
-      fetchLinks(1, search);
-    } catch (err) {
-      setFormError(getErrorMessage(err, 'Failed to create short link.'));
-    } finally {
-      setCreating(false);
-    }
-  };
-
   const handleDelete = async (id) => {
     if (!window.confirm('Are you sure you want to delete this short link?')) return;
     try {
@@ -107,54 +80,10 @@ export const DashboardPage = () => {
 
   return (
     <div className="dashboard-container">
-      {/* Quick Create Card */}
-      <section className="create-card">
-        <div className="create-card-header">
-          <h2 className="create-card-title">Quick create: Short link</h2>
-        </div>
-
-        {formError && <div className="alert alert-danger">{formError}</div>}
-        {formSuccess && <div className="alert alert-success">{formSuccess}</div>}
-
-        <form onSubmit={handleCreate}>
-          <div className="create-form-row">
-            <div className="form-group create-input-url" style={{ marginBottom: 0 }}>
-              <input
-                type="url"
-                className="form-input"
-                placeholder="Enter your destination URL (https://example.com/long-page)"
-                value={originalUrl}
-                onChange={(e) => setOriginalUrl(e.target.value)}
-                required
-              />
-            </div>
-
-            <div className="form-group create-input-slug" style={{ marginBottom: 0 }}>
-              <input
-                type="text"
-                className="form-input"
-                placeholder="Custom alias (optional)"
-                value={customSlug}
-                onChange={(e) => setCustomSlug(e.target.value)}
-              />
-            </div>
-
-            <button
-              type="submit"
-              className="btn btn-primary create-btn-submit"
-              disabled={creating}
-            >
-              {creating ? 'Creating...' : 'Create Com.ly link'}
-            </button>
-          </div>
-        </form>
-      </section>
-
-      {/* Links Management Section */}
       <section className="links-section">
         <div className="links-header">
           <h2 className="links-title">
-            Your Links <span className="badge badge-gray">{totalCount}</span>
+            All Links <span className="badge badge-gray">{totalCount}</span>
           </h2>
 
           <form onSubmit={handleSearchSubmit} className="links-search-bar">
@@ -176,7 +105,7 @@ export const DashboardPage = () => {
           <div className="empty-state">
             <Link2 size={36} color="var(--text-light)" style={{ margin: '0 auto 12px' }} />
             <p style={{ fontWeight: 600, color: 'var(--text-main)' }}>No links found</p>
-            <p style={{ fontSize: '13px' }}>Paste a long URL above to generate your first short link.</p>
+            <p style={{ fontSize: '13px' }}>Click "+ Create new" in the sidebar to generate a short link.</p>
           </div>
         ) : (
           <div className="link-list">

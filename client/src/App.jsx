@@ -14,6 +14,7 @@ import { PublicBioPage } from './pages/PublicBioPage';
 
 // Protected Pages
 import { DashboardPage } from './pages/DashboardPage';
+import { LinksPage } from './pages/LinksPage';
 import { AnalyticsPage } from './pages/AnalyticsPage';
 import { BioBuilderPage } from './pages/BioBuilderPage';
 
@@ -35,6 +36,7 @@ function App() {
           <Route element={<ProtectedRoute />}>
             <Route element={<AppLayout />}>
               <Route path="/dashboard" element={<DashboardPage />} />
+              <Route path="/links" element={<LinksPage />} />
               <Route path="/analytics/:linkId" element={<AnalyticsPage />} />
               <Route path="/bio-builder" element={<BioBuilderPage />} />
             </Route>
