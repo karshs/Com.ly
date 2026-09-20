@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Link2, QrCode, BarChart3, LayoutTemplate, ArrowRight } from 'lucide-react';
@@ -32,7 +31,7 @@ export const LandingPage = () => {
         </div>
       </nav>
 
-      {/* Hero Section  */}
+      {/* Hero Section */}
       <section className="landing-hero">
         <h1 className="landing-hero-title">
           Understand what clicks with your audience
@@ -102,7 +101,7 @@ export const LandingPage = () => {
         </div>
       </section>
 
-      
+      {/* Footer */}
       <footer className="landing-footer">
         <p>© 2026 Com.ly. Simple URL Shortener & Bio-Link Hub.</p>
       </footer>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { linkApi } from '../api/link.api';
 import { QRModal } from '../components/QRModal';
@@ -13,7 +13,6 @@ import {
   Search,
   Calendar,
   MousePointerClick,
-  Sparkles,
 } from 'lucide-react';
 import './DashboardPage.css';
 
@@ -38,7 +37,7 @@ export const DashboardPage = () => {
   // QR Modal state
   const [qrSelectedLink, setQrSelectedLink] = useState(null);
 
-  const fetchLinks = async (targetPage = page, searchTerm = search) => {
+  const fetchLinks = useCallback(async (targetPage = page, searchTerm = search) => {
     try {
       setLoading(true);
       const data = await linkApi.getLinks({ page: targetPage, limit: 10, search: searchTerm });
@@ -50,11 +49,11 @@ export const DashboardPage = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [page, search]);
 
   useEffect(() => {
     fetchLinks(page, search);
-  }, [page]);
+  }, [page, search, fetchLinks]);
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
@@ -69,7 +68,7 @@ export const DashboardPage = () => {
     setCreating(true);
 
     try {
-      const res = await linkApi.createLink({ originalUrl, customSlug });
+      await linkApi.createLink({ originalUrl, customSlug });
       setFormSuccess('Link created successfully!');
       setOriginalUrl('');
       setCustomSlug('');
@@ -103,7 +102,7 @@ export const DashboardPage = () => {
 
   return (
     <div className="dashboard-container">
-      {/* Quick Create Card  */}
+      {/* Quick Create Card */}
       <section className="create-card">
         <div className="create-card-header">
           <h2 className="create-card-title">Quick create: Short link</h2>
@@ -146,7 +145,7 @@ export const DashboardPage = () => {
         </form>
       </section>
 
-      {/* Links Management Section  */}
+      {/* Links Management Section */}
       <section className="links-section">
         <div className="links-header">
           <h2 className="links-title">

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Link as LinkIcon, QrCode, CheckCircle } from 'lucide-react';
@@ -123,7 +123,7 @@ export const SignupPage = () => {
         </div>
       </div>
 
-      {/* Right Visual Panel */}
+      {/* Right Brand Panel */}
       <div className="auth-side-panel">
         <div className="auth-graphic">
           <div className="auth-graphic-chip">

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { authApi } from '../api/auth.api';
 import { CheckCircle, XCircle } from 'lucide-react';

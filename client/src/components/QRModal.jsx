@@ -1,10 +1,10 @@
-import React from 'react';
+import { useState } from 'react';
 import QRCode from 'react-qr-code';
 import { X, Download, Copy, Check } from 'lucide-react';
 import './QRModal.css';
 
 export const QRModal = ({ isOpen, onClose, link }) => {
-  const [copied, setCopied] = React.useState(false);
+  const [copied, setCopied] = useState(false);
 
   if (!isOpen || !link) return null;
 

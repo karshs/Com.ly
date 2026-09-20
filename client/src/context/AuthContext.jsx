@@ -1,8 +1,8 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useState, useEffect } from 'react';
 import { authApi } from '../api/auth.api';
 import { setAccessToken } from '../api/client';
 
-const AuthContext = createContext(null);
+export const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(() => {
@@ -11,7 +11,6 @@ export const AuthProvider = ({ children }) => {
   });
   const [loading, setLoading] = useState(true);
 
-  
   useEffect(() => {
     const initAuth = async () => {
       const savedUser = localStorage.getItem('comly_user');
@@ -21,7 +20,7 @@ export const AuthProvider = ({ children }) => {
           if (data?.accessToken) {
             setAccessToken(data.accessToken);
           }
-        } catch (err) {
+        } catch {
           // Token expired or invalid refresh cookie -> clean up
           localStorage.removeItem('comly_user');
           setUser(null);
@@ -51,7 +50,7 @@ export const AuthProvider = ({ children }) => {
   const logout = async () => {
     try {
       await authApi.logout();
-    } catch (err) {
+    } catch {
       // Ignore network errors on logout
     } finally {
       setUser(null);
@@ -67,10 +66,4 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
-};
+export { useAuth } from '../hooks/useAuth';

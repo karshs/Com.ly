@@ -1,11 +1,9 @@
-import React from 'react';
 import { NavLink, Outlet, Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import {
   Home,
   Link2,
   LayoutTemplate,
-  BarChart3,
   Plus,
   LogOut,
   Search,

@@ -1,4 +1,3 @@
-import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { ProtectedRoute } from './components/ProtectedRoute';
@@ -14,6 +13,7 @@ import { ResetPasswordPage } from './pages/ResetPasswordPage';
 
 // Protected Pages
 import { DashboardPage } from './pages/DashboardPage';
+import { AnalyticsPage } from './pages/AnalyticsPage';
 
 function App() {
   return (
@@ -32,6 +32,7 @@ function App() {
           <Route element={<ProtectedRoute />}>
             <Route element={<AppLayout />}>
               <Route path="/dashboard" element={<DashboardPage />} />
+              <Route path="/analytics/:linkId" element={<AnalyticsPage />} />
             </Route>
           </Route>
 
