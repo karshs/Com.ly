@@ -1,0 +1,263 @@
+/* App Shell Layout */
+.app-container {
+  display: flex;
+  min-height: 100vh;
+  background-color: var(--bg-app);
+}
+
+/* Sidebar */
+.app-sidebar {
+  width: var(--sidebar-width);
+  background-color: #ffffff;
+  border-right: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 50;
+}
+
+.sidebar-brand {
+  padding: 24px 20px;
+  display: flex;
+  align-items: center;
+}
+
+.sidebar-logo {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--primary);
+  text-decoration: none;
+}
+
+.sidebar-logo span {
+  color: #ff6b35;
+}
+
+.sidebar-action {
+  padding: 0 16px 20px;
+}
+
+.sidebar-btn-create {
+  width: 100%;
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 700;
+  border-radius: var(--radius-sm);
+}
+
+/* Navigation Links */
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 0 12px;
+  flex: 1;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #475569;
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  transition: all 0.15s ease;
+}
+
+.nav-item:hover {
+  background-color: #f8fafc;
+  color: var(--primary);
+  text-decoration: none;
+}
+
+.nav-item.active {
+  background-color: var(--primary-light);
+  color: var(--primary);
+  font-weight: 700;
+}
+
+/* Sidebar Footer Profile */
+.sidebar-footer {
+  padding: 16px;
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.user-profile-badge {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  overflow: hidden;
+}
+
+.user-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: var(--radius-full);
+  background-color: var(--primary);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.user-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-main);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.user-email {
+  font-size: 11px;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.btn-logout {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 6px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+}
+
+.btn-logout:hover {
+  background-color: var(--danger-bg);
+  color: var(--danger);
+}
+
+/* Main Content Area */
+.app-main {
+  flex: 1;
+  margin-left: var(--sidebar-width);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Top Header */
+.app-header {
+  height: 64px;
+  background-color: #ffffff;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  position: sticky;
+  top: 0;
+  z-index: 40;
+}
+
+.header-search {
+  position: relative;
+  width: 320px;
+}
+
+.header-search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-light);
+  pointer-events: none;
+}
+
+.header-search-input {
+  width: 100%;
+  padding: 8px 12px 8px 36px;
+  font-size: 13px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  background-color: #f8fafc;
+  outline: none;
+  transition: all 0.15s;
+}
+
+.header-search-input:focus {
+  background-color: #ffffff;
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 3px rgba(12, 86, 233, 0.1);
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.header-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-full);
+  background-color: #0c56e9;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
+  border: 2px solid #ffffff;
+  box-shadow: var(--shadow-sm);
+}
+
+/* App Page Body */
+.app-page-content {
+  padding: 32px;
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .app-sidebar {
+    width: 60px;
+  }
+  .sidebar-brand span,
+  .sidebar-logo,
+  .sidebar-btn-create span,
+  .nav-item span,
+  .user-info {
+    display: none;
+  }
+  .app-main {
+    margin-left: 60px;
+  }
+  .app-header {
+    padding: 0 16px;
+  }
+  .header-search {
+    width: 180px;
+  }
+  .app-page-content {
+    padding: 16px;
+  }
+}
