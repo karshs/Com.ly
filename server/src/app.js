@@ -4,7 +4,8 @@ const cookieParser = require('cookie-parser');
 
 const authRoute =  require('./routes/auth.routes');
 const linkRoutes = require('./routes/link.routes');
-const analyticsRoutes = require('./routes/analytics.router');
+const analyticsRoutes = require('./routes/analytics.routes');
+const bioRoutes = require('./routes/bio.routes'); 
 
 const { redirectLink } = require('./controllers/link.controller');
 
@@ -24,6 +25,7 @@ app.get('/r/:shortCode', redirectLink);
 app.use('/api/auth', authRoute);
 app.use('/api/links', linkRoutes);
 app.use('/api/analytics', analyticsRoutes);
+app.use('/api/bio', bioRoutes);
 
 app.get('/health', (req,res) => {
 
