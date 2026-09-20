@@ -2,14 +2,18 @@ import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { ProtectedRoute } from './components/ProtectedRoute';
+import { AppLayout } from './components/AppLayout';
 
-// Pages
+// Public Pages
 import { LandingPage } from './pages/LandingPage';
 import { LoginPage } from './pages/LoginPage';
 import { SignupPage } from './pages/SignupPage';
 import { VerifyEmailPage } from './pages/VerifyEmailPage';
 import { ForgotPasswordPage } from './pages/ForgotPasswordPage';
 import { ResetPasswordPage } from './pages/ResetPasswordPage';
+
+// Protected Pages
+import { DashboardPage } from './pages/DashboardPage';
 
 function App() {
   return (
@@ -24,9 +28,11 @@ function App() {
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
           <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
 
-          {/* Protected App Routes (We will add Dashboard, Analytics, Bio Builder next) */}
+          {/* Protected App Routes */}
           <Route element={<ProtectedRoute />}>
-            <Route path="/dashboard" element={<div style={{ padding: 40 }}><h2>Dashboard Placeholder</h2></div>} />
+            <Route element={<AppLayout />}>
+              <Route path="/dashboard" element={<DashboardPage />} />
+            </Route>
           </Route>
 
           {/* 404 Fallback */}
