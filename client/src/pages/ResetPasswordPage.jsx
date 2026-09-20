@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { authApi } from '../api/auth.api';
+import { getErrorMessage } from '../utils/error';
 import './Auth.css';
 
 export const ResetPasswordPage = () => {
@@ -21,7 +22,7 @@ export const ResetPasswordPage = () => {
       setMessage(res.message || 'Password reset successful! Redirecting to login...');
       setTimeout(() => navigate('/login'), 2000);
     } catch (err) {
-      setError(err.response?.data?.message || 'Invalid or expired token.');
+      setError(getErrorMessage(err, 'Invalid or expired token.'));
     } finally {
       setLoading(false);
     }

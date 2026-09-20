@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { authApi } from '../api/auth.api';
+import { getErrorMessage } from '../utils/error';
 import './Auth.css';
 
 export const ForgotPasswordPage = () => {
@@ -23,7 +24,7 @@ export const ForgotPasswordPage = () => {
         setResetToken(res.resetToken);
       }
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to send reset link.');
+      setError(getErrorMessage(err, 'Failed to send reset link.'));
     } finally {
       setLoading(false);
     }

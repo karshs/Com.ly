@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { authApi } from '../api/auth.api';
+import { getErrorMessage } from '../utils/error';
 import { CheckCircle, XCircle } from 'lucide-react';
 import './Auth.css';
 
@@ -8,22 +9,25 @@ export const VerifyEmailPage = () => {
   const { token } = useParams();
   const [status, setStatus] = useState('verifying'); // verifying | success | error
   const [message, setMessage] = useState('');
+  const hasRequested = useRef(false);
 
   useEffect(() => {
+    // Guard against React StrictMode double-invoking the one-time token
+    if (hasRequested.current || !token) return;
+    hasRequested.current = true;
+
     const verify = async () => {
       try {
         const res = await authApi.verifyEmail(token);
         setStatus('success');
-        setMessage(res.message || 'Email verified successfully!');
+        setMessage(res.message || 'Email verified successfully! You can now log in.');
       } catch (err) {
         setStatus('error');
-        setMessage(err.response?.data?.message || 'Verification link is invalid or has expired.');
+        setMessage(getErrorMessage(err, 'Verification link is invalid or has expired.'));
       }
     };
 
-    if (token) {
-      verify();
-    }
+    verify();
   }, [token]);
 
   return (
@@ -57,9 +61,14 @@ export const VerifyEmailPage = () => {
               <XCircle size={56} color="var(--danger)" style={{ margin: '0 auto 16px' }} />
               <h2 className="auth-title">Verification Failed</h2>
               <p className="auth-subtitle">{message}</p>
-              <Link to="/signup" className="btn btn-secondary btn-block" style={{ marginTop: '20px' }}>
-                Try signing up again
-              </Link>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '20px' }}>
+                <Link to="/login" className="btn btn-primary btn-block">
+                  Try Logging In
+                </Link>
+                <Link to="/signup" className="btn btn-secondary btn-block">
+                  Back to Sign Up
+                </Link>
+              </div>
             </div>
           )}
         </div>

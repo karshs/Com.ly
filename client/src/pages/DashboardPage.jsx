@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { linkApi } from '../api/link.api';
 import { QRModal } from '../components/QRModal';
+import { getErrorMessage } from '../utils/error';
 import {
   Link2,
   Copy,
@@ -75,7 +76,7 @@ export const DashboardPage = () => {
       setPage(1);
       fetchLinks(1, search);
     } catch (err) {
-      setFormError(err.response?.data?.message || 'Failed to create short link.');
+      setFormError(getErrorMessage(err, 'Failed to create short link.'));
     } finally {
       setCreating(false);
     }
@@ -87,7 +88,7 @@ export const DashboardPage = () => {
       await linkApi.deleteLink(id);
       fetchLinks(page, search);
     } catch (err) {
-      alert(err.response?.data?.message || 'Failed to delete link');
+      alert(getErrorMessage(err, 'Failed to delete link'));
     }
   };
 

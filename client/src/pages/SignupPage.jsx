@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { Link as LinkIcon, QrCode, CheckCircle } from 'lucide-react';
+import { getErrorMessage } from '../utils/error';
+import { Link as LinkIcon, QrCode, CheckCircle, ArrowRight } from 'lucide-react';
 import './Auth.css';
 
 export const SignupPage = () => {
@@ -28,7 +29,7 @@ export const SignupPage = () => {
         setDevVerifyToken(res.verificationToken);
       }
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to create account. Please check your details.');
+      setError(getErrorMessage(err, 'Failed to create account. Please check your details.'));
     } finally {
       setLoading(false);
     }
@@ -51,15 +52,22 @@ export const SignupPage = () => {
           {error && <div className="alert alert-danger">{error}</div>}
 
           {successMsg ? (
-            <div className="alert alert-success" style={{ flexDirection: 'column', alignItems: 'flex-start', gap: '8px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 600 }}>
-                <CheckCircle size={18} /> {successMsg}
+            <div className="alert alert-success" style={{ flexDirection: 'column', alignItems: 'flex-start', gap: '12px', padding: '18px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 700, fontSize: '15px' }}>
+                <CheckCircle size={20} /> {successMsg}
               </div>
+              
               {devVerifyToken && (
-                <div style={{ marginTop: '8px', fontSize: '13px' }}>
-                  <p><strong>Testing Link (Development):</strong></p>
-                  <Link to={`/verify/${devVerifyToken}`} style={{ wordBreak: 'break-all' }}>
-                    Click here to verify email directly
+                <div style={{ width: '100%', marginTop: '4px', paddingTop: '10px', borderTop: '1px dashed #a7f3d0' }}>
+                  <p style={{ fontSize: '13px', marginBottom: '8px' }}>
+                    Click below to verify your email directly:
+                  </p>
+                  <Link
+                    to={`/verify/${devVerifyToken}`}
+                    className="btn btn-primary btn-sm"
+                    style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}
+                  >
+                    Verify Email Now <ArrowRight size={14} />
                   </Link>
                 </div>
               )}
@@ -72,7 +80,7 @@ export const SignupPage = () => {
                   id="username"
                   type="text"
                   className="form-input"
-                  placeholder="e.g. karsh"
+                  placeholder="e.g. rohan"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   required

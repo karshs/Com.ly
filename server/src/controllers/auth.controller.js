@@ -24,8 +24,23 @@ const signup = async (req, res) => {
     });
 
     if (existingUser) {
+      // If user exists with this email but is unverified, reissue verification token
+      if (existingUser.email === email.toLowerCase() && !existingUser.isVerified) {
+        const verificationToken = crypto.randomBytes(32).toString('hex');
+        existingUser.verificationToken = verificationToken;
+        existingUser.password = password;
+        if (username) existingUser.username = username;
+        await existingUser.save();
+
+        return res.status(200).json({
+          message: 'Account exists but is not verified. A new verification link has been generated.',
+          verificationToken,
+          verificationUrl: `${process.env.BASE_URL || 'http://localhost:5000'}/api/auth/verify/${verificationToken}`,
+        });
+      }
+
       if (existingUser.email === email.toLowerCase()) {
-        return res.status(409).json({ error: 'Email is already registered' });
+        return res.status(409).json({ error: 'Email is already registered. Please log in.' });
       }
       return res.status(409).json({ error: 'Username is already taken' });
     }
