@@ -27,6 +27,9 @@
 ## 📌 Table of Contents
 - [Overview](#-overview)
 - [Key Features](#-key-features)
+- [System Architecture & Flows](#-system-architecture--flows)
+- [Database Design & Entity Relations](#-database-design--entity-relations)
+- [URL Lifecycle & Analytics Workflow](#-url-lifecycle--analytics-workflow)
 - [Security & Architecture](#-security--architecture)
 - [Technology Stack](#-technology-stack)
 - [Project Directory Structure](#-project-directory-structure)
@@ -67,6 +70,93 @@
 - **Multiple Curated Themes**: Minimal Light, Dark Slate, and Gradient.
 - **Interactive Live Phone Mockup**: Real-time side-by-side preview.
 - **Public Mobile-Responsive Route**: Accessible at `/bio/:username`.
+
+---
+
+## 🏗 System Architecture & Flows
+
+### System Architecture
+```mermaid
+graph TD
+    Client[React 19 / Vite SPA] -->|REST API + Bearer JWT| Server[Node.js / Express API]
+    Server -->|Mongoose ODM| DB[(MongoDB)]
+    Visitor[Public Visitor] -->|GET /r/:shortCode| Server
+    Server -->|HTTP 302 Found| Visitor
+    Server -.->|Async Telemetry Ingestion| DB
+```
+
+### User & Redirection Flow
+```mermaid
+flowchart LR
+    A[Creator] -->|Auth & Register| B(Dashboard)
+    B -->|Shorten URL / Custom Alias| C{Link Engine}
+    C -->|Generate QR| D[Dynamic QR Code]
+    C -->|Share Short Link| E[Visitor Click]
+    E -->|302 Instant Redirect| F[Target Destination]
+    E -.->|Log Device & Referrer| G[Recharts Analytics]
+    B -->|Customize Bio| H[Public Bio Page]
+```
+
+---
+
+## 🗄️ Database Design & Entity Relations
+
+```mermaid
+erDiagram
+    User ||--o{ Link : "owns"
+    User ||--o| BioProfile : "customizes"
+    Link ||--o{ Click : "receives"
+
+    User {
+        ObjectId id PK
+        String username UK
+        String email UK
+        String password
+        Boolean isVerified
+    }
+    Link {
+        ObjectId id PK
+        ObjectId owner FK
+        String originalUrl
+        String shortCode UK
+        Number clicks
+        Boolean isActive
+    }
+    Click {
+        ObjectId id PK
+        ObjectId link FK
+        DateTime timestamp
+        String referrer
+        String device
+        String ipHash
+    }
+    BioProfile {
+        ObjectId id PK
+        ObjectId owner FK
+        String displayName
+        String bio
+        String theme
+        Array links
+    }
+```
+
+---
+
+## 🔄 URL Lifecycle & Analytics Workflow
+
+```mermaid
+stateDiagram-v2
+    [*] --> LinkCreated: Creator enters Target URL & Alias
+    LinkCreated --> VisitorAccess: Visitor opens /r/:shortCode
+    state VisitorAccess {
+        [*] --> ValidateSlug: Lookup active link
+        ValidateSlug --> TelemetryCapture: Parse Referrer, Device & Hash IP
+        TelemetryCapture --> AsyncInsert: Asynchronously log Click event
+        AsyncInsert --> HTTP302: Respond HTTP 302 Redirect
+    }
+    VisitorAccess --> TelemetryAnalytics: Data aggregated in Analytics Dashboard
+    TelemetryAnalytics --> [*]
+```
 
 ---
 
